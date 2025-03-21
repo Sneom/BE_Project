@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Traffic Classification</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="text-center my-4">
+            <h1><i class="bi bi-diagram-3"></i> Network Traffic Classifier</h1>
+            <p class="lead">Upload network traffic data for classification using semi-supervised federated learning</p>
+        </header>
+
+        <div class="card main-card">
+            <div class="card-body">
+                <!-- Upload Section -->
+                <div id="upload-section">
+                    <h4 class="card-title mb-4"><i class="bi bi-upload"></i> Upload Traffic Data</h4>
+                    
+                    <div class="upload-area" id="dropzone">
+                        <i class="bi bi-cloud-arrow-up display-1"></i>
+                        <h5>Drag & Drop CSV File Here</h5>
+                        <p>or</p>
+                        <form id="upload-form" enctype="multipart/form-data">
+                            <input type="file" id="file-input" name="file" accept=".csv" class="form-control mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-cloud-upload"></i> Upload & Analyze
+                            </button>
+                        </form>
+                        <p class="mt-3 text-muted">Maximum file size: 200MB</p>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Model Status</h5>
+                        <div id="model-info-section">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading Section -->
+                <div id="loading-section" style="display: none;">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary spinner-lg" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h4 class="mt-4">Processing your data...</h4>
+                        <p class="text-muted">This may take a few moments depending on file size</p>
+                        
+                        <div class="progress mt-4">
+                            <div id="upload-progress" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                 role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="results-section" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0"><i class="bi bi-bar-chart"></i> Classification Results</h4>
+                        <button id="back-btn" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    
+                    <!-- Dashboard Controls -->
+                    <div class="dashboard-nav mb-4">
+                        <ul class="nav nav-tabs nav-fill">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="overview-tab" data-bs-toggle="tab" href="#overview">
+                                    <i class="bi bi-grid"></i> Overview
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="predictions-tab" data-bs-toggle="tab" href="#predictions">
+                                    <i class="bi bi-list-check"></i> Predictions
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="metrics-tab" data-bs-toggle="tab" href="#metrics">
+                                    <i class="bi bi-graph-up"></i> Performance Metrics
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="details-tab" data-bs-toggle="tab" href="#details">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Overview Tab -->
+                        <div class="tab-pane fade show active" id="overview">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="bi bi-pie-chart"></i> Traffic Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <canvas id="distribution-chart" height="250"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="card mb-4">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="bi bi-info-circle"></i> Analysis Details</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Samples Processed</th>
+                                                        <td id="num-samples">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>File Size</th>
+                                                        <td id="file-size">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Processing Time</th>
+                                                        <td id="processing-time">-</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Device Used</th>
+                                                        <td id="device-used">-</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Class Summary Card -->
+                                    <div class="card mb-4">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="mb-0"><i class="bi bi-tags"></i> Traffic Summary</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="traffic-summary"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Predictions Tab -->
+                        <div class="tab-pane fade" id="predictions">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-list-check"></i> Prediction Results</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="predictions-container" class="row"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Performance Metrics Tab -->
+                        <div class="tab-pane fade" id="metrics">
+                            <div class="row">
+                                <div class="col-12 mb-4" id="confusion-matrix-container">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="bi bi-grid-3x3"></i> Confusion Matrix</h5>
+                                        </div>
+                                        <div class="card-body text-center">
+                                            <div id="confusion-matrix-placeholder">
+                                                <div class="alert alert-info">
+                                                    <i class="bi bi-info-circle"></i> Confusion matrix will be displayed when ground truth labels are available.
+                                                </div>
+                                            </div>
+                                            <img id="confusion-matrix-img" class="img-fluid" alt="Confusion Matrix" style="display:none;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12" id="classification-report-container">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="bi bi-file-earmark-text"></i> Classification Report</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div id="classification-report-placeholder">
+                                                <div class="alert alert-info">
+                                                    <i class="bi bi-info-circle"></i> Classification report will be displayed when ground truth labels are available.
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive" id="classification-report-table-container" style="display:none;">
+                                                <table id="classification-report-table" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Class</th>
+                                                            <th>Precision</th>
+                                                            <th>Recall</th>
+                                                            <th>F1-Score</th>
+                                                            <th>Support</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- Classification report will be inserted here -->
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Details Tab -->
+                        <div class="tab-pane fade" id="details">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="bi bi-clipboard-data"></i> Additional Information</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <h6><i class="bi bi-info-circle"></i> About the Model</h6>
+                                        <p>This network traffic classification system uses a semi-supervised federated learning approach to classify network traffic into 5 categories: chat, email, file transfer, streaming, and VoIP.</p>
+                                        <p>The model employs a combined approach with CNN classification, GAN-based feature extraction, and GMM clustering for robust traffic identification.</p>
+                                    </div>
+                                    
+                                    <div class="alert alert-secondary">
+                                        <h6><i class="bi bi-gear"></i> Processing Pipeline</h6>
+                                        <ol>
+                                            <li>Data preprocessing and normalization</li>
+                                            <li>Feature extraction using discriminator network</li>
+                                            <li>Classification using CNN model</li>
+                                            <li>Pseudo-labeling using GMM clustering</li>
+                                            <li>Results aggregation and visualization</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center my-4 text-muted">
+            <p>Network Traffic Classification System using Semi-Supervised Federated Learning</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 

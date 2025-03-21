@@ -1,0 +1,276 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.upload-area {
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+.upload-area:hover, .upload-area.dragover {
+    border-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.upload-area i {
+    color: #0d6efd;
+    margin-bottom: 1rem;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+}
+
+.btn-outline-primary {
+    border-color: #0d6efd;
+    color: #0d6efd;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.progress {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #e9ecef;
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    background-color: #0d6efd;
+}
+
+.spinner-lg {
+    width: 4rem;
+    height: 4rem;
+}
+
+.prediction-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.prediction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.confidence-bar {
+    height: 6px;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.confidence-bar-fill {
+    height: 100%;
+    background-color: #0d6efd;
+}
+
+/* New styles for prediction summary */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+/* Color styles for traffic types */
+.bg-chat, .bg-primary {
+    background-color: #4e73df !important;
+}
+
+.bg-email, .bg-success {
+    background-color: #1cc88a !important;
+}
+
+.bg-file, .bg-info {
+    background-color: #36b9cc !important;
+}
+
+.bg-streaming, .bg-warning {
+    background-color: #f6c23e !important;
+}
+
+.bg-voip, .bg-danger {
+    background-color: #e74a3b !important;
+}
+
+/* Classification report table styles */
+#classification-report-table th,
+#classification-report-table td {
+    text-align: center;
+}
+
+#classification-report-table th:first-child,
+#classification-report-table td:first-child {
+    text-align: left;
+}
+
+/* Make sure N/A values are visually distinct */
+#classification-report-table td:contains("N/A"),
+#classification-report-table td:-moz-any("N/A") {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Direct styling for N/A text */
+.na-value {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Add some hover effect to the classification report */
+#classification-report-section .table td {
+    vertical-align: middle;
+}
+
+#classification-report-section .table-bordered {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#classification-report-section .table-bordered th,
+#classification-report-section .table-bordered td {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Better styling for confusion matrix */
+#confusion-matrix-section .card-body {
+    padding: 1.5rem;
+    background-color: white;
+}
+
+#confusion-matrix-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Traffic distribution summary card */
+.traffic-summary .progress {
+    height: 8px;
+}
+
+.traffic-summary .progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+
+/* Dashboard tabs styling */
+.dashboard-nav .nav-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-nav .nav-link {
+    border: none;
+    padding: 0.75rem 1rem;
+    color: #6c757d;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.dashboard-nav .nav-link:hover {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.05);
+}
+
+.dashboard-nav .nav-link.active {
+    color: #0d6efd;
+    border-bottom: 3px solid #0d6efd;
+    background-color: transparent;
+}
+
+.dashboard-nav .nav-link i {
+    margin-right: 0.5rem;
+}
+
+/* Tab content fade animation */
+.tab-pane.fade {
+    transition: all 0.2s ease;
+}
+
+.tab-pane.fade.show {
+    opacity: 1;
+}
+
+/* Traffic progress bars */
+.traffic-progress {
+    height: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Make the info alerts softer */
+.alert-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    border-color: rgba(13, 202, 240, 0.2);
+    color: #055160;
+}
+
+.alert-secondary {
+    background-color: rgba(108, 117, 125, 0.1);
+    border-color: rgba(108, 117, 125, 0.2);
+    color: #41464b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-nav .nav-link {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-nav .nav-link i {
+        margin-right: 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-nav .nav-link span {
+        display: none;
+    }
+    
+    .dashboard-nav .nav-link i {
+        margin-right: 0;
+        font-size: 1.1rem;
+    }
+} 
